@@ -1,0 +1,30 @@
+     1                                 %line 1+1 division.asm
+     2                                 
+     3                                 
+     4                                 
+     5                                 
+     6                                 
+     7                                 
+     8                                 [section .data]
+     9                                 SYS_exit equ 60
+    10                                 EXIT_SUCCESS equ 0
+    11 00000000 00743BA40B000000       num1 dq 50000000000
+    12 00000008 D5DC3200               num2 dd 3333333
+    13 0000000C 00000000               quotient dd 0
+    14 00000010 00000000               remainder dd 0
+    15                                 
+    16                                 [section .text]
+    17                                 [global _start]
+    18                                 
+    19                                 _start:
+    20 00000000 8B1425[04000000]        mov edx, dword[num1+4]
+    21 00000007 8B0425[00000000]        mov eax, dword[num1+0]
+    22 0000000E F73425[00000000]        div dword[num2]
+    23                                 
+    24 00000015 890425[00000000]        mov dword[quotient], eax
+    25 0000001C 891425[00000000]        mov dword[remainder], edx
+    26                                 
+    27 00000023 48C7C03C000000          mov rax, SYS_exit
+    28 0000002A 48C7C700000000          mov rdi, EXIT_SUCCESS
+    29 00000031 0F05                    syscall
+    30                                 

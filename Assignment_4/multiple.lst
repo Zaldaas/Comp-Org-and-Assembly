@@ -1,0 +1,47 @@
+     1                                 %line 1+1 multiple.asm
+     2                                 
+     3                                 
+     4                                 
+     5                                 
+     6                                 
+     7                                 
+     8                                 
+     9                                 
+    10                                 [section .data]
+    11                                 SYS_exit equ 60
+    12                                 EXIT_SUCCESS equ 0
+    13 00000000 E100                   num dw 225
+    14 00000002 0000                   mul_3 dw 0
+    15 00000004 0000                   other dw 0
+    16                                 
+    17                                 [section .text]
+    18                                 [global _start]
+    19                                 _start:
+    20 00000000 668B0425[00000000]      mov ax, word[num]
+    21 00000008 66BA0000                mov dx, 0
+    22 0000000C 66BB0300                mov bx, 3
+    23 00000010 66F7F3                  div bx
+    24                                 
+    25 00000013 6683FA00                cmp dx, 0
+    26 00000017 752D                    jne not_mul_3
+    27                                 
+    28 00000019 668B0425[00000000]      mov ax, word[num]
+    29 00000021 66BA0000                mov dx, 0
+    30 00000025 66BB0500                mov bx, 5
+    31 00000029 66F7F3                  div bx
+    32                                 
+    33 0000002C 6683FA00                cmp dx, 0
+    34 00000030 7414                    je not_mul_3
+    35                                 
+    36 00000032 66B80100                mov ax, 1
+    37 00000036 66030425[00000000]      add ax, word[mul_3]
+    38 0000003E 66890425[00000000]      mov word[mul_3], ax
+    39 00000046 EB12                    jmp done
+    40                                 not_mul_3:
+    41 00000048 66B80100                mov ax, 1
+    42 0000004C 66030425[00000000]      add ax, word[other]
+    43 00000054 66890425[00000000]      mov word[other], ax
+    44                                 done:
+    45 0000005C 48C7C03C000000          mov rax, SYS_exit
+    46 00000063 48C7C700000000          mov rdi, EXIT_SUCCESS
+    47 0000006A 0F05                    syscall

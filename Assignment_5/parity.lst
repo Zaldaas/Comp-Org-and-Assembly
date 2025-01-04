@@ -1,0 +1,41 @@
+     1                                 %line 1+1 parity.asm
+     2                                 
+     3                                 
+     4                                 
+     5                                 
+     6                                 
+     7                                 
+     8                                 
+     9                                 
+    10                                 
+    11                                 
+    12                                 
+    13                                 
+    14                                 [section .data]
+    15                                 SYS_exit equ 60
+    16                                 EXIT_SUCCESS equ 0
+    17 00000000 0C00EB038F19686015-    array dw 12, 1003, 6543, 24680, 789, 30123, 32766
+    18 00000000 03AB75FE7F         
+    19                                 
+    20                                 [section .bss]
+    21 00000000 <gap>                  even resw 7
+    22                                 
+    23                                 [section .text]
+    24                                 [global _start]
+    25                                 _start:
+    26 00000000 48C7C600000000          mov rsi, 0
+    27 00000007 48C7C700000000          mov rdi, 0
+    28                                 doloop:
+    29 0000000E 668B8436[00000000]      mov ax, word[array+(rsi*2)]
+    30 00000016 66A90100                test ax, 1
+    31 0000001A 7509                    jnz not_even
+    32 0000001C 6689843F[00000000]      mov word[even+(rdi*2)], ax
+    33 00000024 48FFC7                  inc rdi
+    34                                 not_even:
+    35 00000027 48FFC6                  inc rsi
+    36 0000002A 4883FE07                cmp rsi, 7
+    37 0000002E 72DC                    jb doloop
+    38                                 
+    39 00000030 48C7C03C000000          mov rax, SYS_exit
+    40 00000037 48C7C700000000          mov rdi, EXIT_SUCCESS
+    41 0000003E 0F05                    syscall
